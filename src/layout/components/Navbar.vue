@@ -13,7 +13,7 @@
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              首页
+              控制端
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">

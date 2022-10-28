@@ -31,19 +31,9 @@ const actions = {
   // user login
   async login({ commit }, userInfo) {
     const { username, password } = userInfo
-    // return new Promise((resolve, reject) => {
-    //   login({ username: username.trim(), password: password }).then(response => {
-    //     const { data } = response
-    //     commit('SET_TOKEN', data.token)
-    //     setToken(data.token)
-    //     resolve()
-    //   }).catch(error => {
-    //     reject(error)
-    //   })
-    // })
     let result = await login({username: username.trim(), password: password});
     // console.dir(Promise)
-    if(result.code==20000){
+    if(result.code == 20000||result.code == 200){
       commit('SET_TOKEN', result.data.token)
       setToken(result.data.token)
       return 'ok';
@@ -54,23 +44,6 @@ const actions = {
 
   // get user info
   async getInfo({ commit, state }) {
-    // return new Promise((resolve, reject) => {
-    //   getInfo(state.token).then(response => {
-    //     const { data } = response
-
-    //     if (!data) {
-    //       return reject('Verification failed, please Login again.')
-    //     }
-
-    //     const { name, avatar } = data
-
-    //     commit('SET_NAME', name)
-    //     commit('SET_AVATAR', avatar)
-    //     resolve(data)
-    //   }).catch(error => {
-    //     reject(error)
-    //   })
-    // })
     const info = await getInfo(state.token)
     const {data} = info
     if(!data){
