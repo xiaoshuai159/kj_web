@@ -26,44 +26,7 @@
       </div> -->
     </el-form>
   </div>
-  <!-- <div class="login-register">
-		<div class="contain">
-			<div class="big-box" :class="{active:isLogin}">
-				<div class="big-contain" key="bigContainLogin" v-if="isLogin">
-					<div class="btitle">用户登录</div>
-					<div class="bform">
-						<input type="email" placeholder="用户名" v-model="form.useremail">
-						<span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>
-						<input type="password" placeholder="密码" v-model="form.userpwd">
-						<span class="errTips" v-if="emailError">* 密码填写错误 *</span>
-					</div>
-					<button class="bbutton" @click="login">登录</button>
-				</div>
-				<div class="big-contain" key="bigContainRegister" v-else>
-					<div class="btitle">创建用户</div>
-					<div class="bform">
-						<input type="text" placeholder="用户名" v-model="form.username">
-						<span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
-						<input type="email" placeholder="邮箱" v-model="form.useremail">
-						<input type="password" placeholder="密码" v-model="form.userpwd">
-					</div>
-					<button class="bbutton" @click="register">注册</button>
-				</div>
-			</div>
-			<div class="small-box" :class="{active:isLogin}">
-				<div class="small-contain" key="smallContainRegister" v-if="isLogin">
-					<div class="stitle">你好，朋友!</div>
-					<p class="scontent">开始注册，和我们一起旅行</p>
-					<button class="sbutton" @click="changeType">注册</button>
-				</div>
-				<div class="small-contain" key="smallContainLogin" v-else>
-					<div class="stitle">欢迎回来!</div>
-					<p class="scontent">与我们保持联系，请登录你的账户</p>
-					<button class="sbutton" @click="changeType">登录</button>
-				</div>
-			</div>
-		</div>
-	</div> -->
+
 </template>
 
 <script>
@@ -99,17 +62,7 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      //新登录注册数据如下
-      // msg:'',
-      // isLogin:false,
-      // emailError: false,
-      // passwordError: false,
-      // existed: false,
-      // form:{
-      //   username:'',
-      //   useremail:'',
-      //   userpwd:''
-      // }
+      
     }
   },
   // mounted(){
@@ -140,6 +93,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log('走到then了');
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
@@ -151,75 +105,6 @@ export default {
         }
       })
     },
-    //新页面登录注册方法
-    changeType() {
-                //this.$router.push({path:'/view'}),
-				this.isLogin = !this.isLogin
-				this.form.username = ''
-				this.form.useremail = ''
-				this.form.userpwd = ''
-			},
-    login() {
-        const self = this;
-        console.log(self.form);
-        if (self.form.useremail != "" && self.form.userpwd != "") {
-          self.$axios({
-            method:'post',
-            url: 'http://192.168.10.59:8000/api/v1/auth/',
-            data: {
-              useremail: self.form.username,
-              userpwd: self.form.userpwd
-            }
-          })
-          .then((response) => {
-                            console.log(response)
-              if(response.status==200){
-                this.$router.push({path:'/layout/control'})
-              }else{
-              }
-                        })
-          .catch( err => {
-            console.log(err);
-            this.$message({
-              message: '密码或账号错误',
-              type: 'error'
-              });
-          })
-        } else{
-          alert("填写不能为空！");
-        }
-      },
-    register(){
-      const self = this;
-      if(self.form.username != "" && self.form.useremail != "" && self.form.userpwd != ""){
-        self.$axios({
-          method:'post',
-          url: 'http://192.168.10.59:8000/register/',
-          data: {
-            username: String(self.form.username),
-            usermail: String(self.form.useremail),
-            userpwd: String(self.form.userpwd),
-          }
-        })
-        //console.log(self.form)
-        .then((response) => {
-                          console.log(response)
-            if(response.status==200){
-              this.$message({
-              message: '恭喜您，注册成功',
-              type: 'success'
-              });
-            }else{
-
-            }
-          })
-        .catch( err => {
-          console.log(err);
-        })
-      } else {
-        alert("填写不能为空！");
-      }
-    }
   }
 }
 </script>

@@ -24,29 +24,41 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
+    // port: port,
+    // open: true,
+    // overlay: {
+    //   warnings: false,
+    //   errors: true
+    // },
     //配置代理跨域
     proxy:{
-      
-      '/dev-api':{
-        target:'http://39.98.123.211:8170',
-        pathRewrite:{'^/dev-api':''}
+      '': {       
+        // target:'http://192.168.10.59:8000/',
+        // target:'http://192.168.10.54:8000/',
+        target:'http://192.168.120.2:8000/',
+        ws: true,
+        changeOrigin: true,
+        // secure: false, // 如果是https接口，需要配置这个参数
+        secure: false, // 如果是https接口，需要配置这个参数  https:false
+        pathRewrite: { '^': '' }
       },
-      '/two':{
-        target:'http://39.98.123.211:8510',
-        pathRewrite:{'^/two':''}
-      }
+      // headers: {
+      //   'Access-Control-Allow-Origin': '*',
+      // },
+      // '/dev-api':{
+      //   target:'http://39.98.123.211:8170',
+      //   pathRewrite:{'^/dev-api':''}
+      // },
+      // '/two':{
+      //   target:'http://39.98.123.211:8510',
+      //   pathRewrite:{'^/two':''}
+      // }
     }
   },
   configureWebpack: {
