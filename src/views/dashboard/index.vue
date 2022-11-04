@@ -22,8 +22,7 @@
     <el-row :gutter="20">
       <el-col :span="12" :offset="6">
         <div style="display:flex;justify-content:space-around;">
-          <el-button type="primary" @click="allStart()">全部开启</el-button>
-          <el-button type="primary" @click="allStart()">全部重启</el-button>
+          <el-button type="primary" @click="allStart()" :loading="loading">全部开启</el-button>
           <el-button type="primary" @click="CloseAllProductStatus()">全部关闭</el-button>
         </div>
       </el-col>
@@ -38,6 +37,7 @@ export default {
   name: 'Dashboard',
   data() {
     return {
+      loading:false,
       myChart:null,
       timer:null,
       tableData: [{
@@ -73,6 +73,17 @@ export default {
     // console.log(this.tableData[2]);
     this.initCharts();
   },
+  beforeDestroy(){
+    clearInterval(this.timer)
+    this.timer = null;
+    for (let i = 1; i < 10000; i++) {
+        clearInterval(i);
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = true
+    next(0)
+  },
   methods: {
     initCharts() {
       this.myChart = this.$echarts.init(this.$refs.chart);
@@ -96,14 +107,14 @@ export default {
         // to a column of dataset.source by default.
         series: [{ type: 'bar' }, { type: 'bar' }]
       };
-      console.log(option.dataset.source[1]['CPU占比(%)']);
       option && this.myChart.setOption(option);
     },
     
     async getAllProductStatus() {
-      console.log('点击了开启按钮');
+      // console.log('点击了开启按钮');
       const allProductStatus = await this.$API.dashboard.reqProductStatus() //获取数据
-      console.log(allProductStatus);
+      
+      // console.log(allProductStatus);
       // 将获取的数据赋值给表格和柱状图
       // 1.赋值给表格
       this.tableData[0].state=allProductStatus[1].status
@@ -155,14 +166,25 @@ export default {
       option && this.myChart.setOption(option);
       // 设置定时器 重复更新数据
     },
-    allStart(){
-      this.getAllProductStatus()
+    async allStart(){
+      this.$message({
+          message: '正在开启，请稍候...',
+          type: 'success'
+        });
+      this.loading = true
+      await this.getAllProductStatus()
+      this.loading = false
       this.timer = setInterval(()=>{
         this.getAllProductStatus()
       },30000)
     },
     CloseAllProductStatus() {
-      console.log('点击了关闭按钮');
+      for (let i = 1; i < 10000; i++) {
+                clearInterval(i);
+            }
+      // clearInterval(this.timer)
+      this.timer = null
+      this.$API.dashboard.reqCloseAll()
       this.tableData = [{
         platform: 'DPDK',
         CPUratio: '0%',
@@ -190,6 +212,26 @@ export default {
         Memoryratio: '0%',
         state: '关闭'
       }]
+      const option = {
+        legend: {},
+        tooltip: {},
+        dataset: {
+          dimension: ['product', 'CPU占比(%)', '内存占比(%)'],
+          source: [
+            { product: 'DPDK', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'ZEEK', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'KAFKA', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'MODELS_xy', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'MODELS_zq', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+          ]
+        },
+        xAxis: { type: 'category' },
+        yAxis: {},
+        // Declare several bar series, each will be mapped
+        // to a column of dataset.source by default.
+        series: [{ type: 'bar' }, { type: 'bar' }]
+      };
+      option && this.myChart.setOption(option);
       //再清空定时器 clearInterval  beforeDestory(){}也要清空一下定时器
     }
   }

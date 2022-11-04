@@ -39,9 +39,12 @@ module.exports = {
     //配置代理跨域
     proxy:{
       '': {       
+        // target:'http://192.168.120.2:8000/', 
+        // target:'http://192.168.50.197:8000/', 
+        // target:'http://192.168.10.50:8000/', 
         // target:'http://192.168.10.59:8000/',
-        // target:'http://192.168.10.54:8000/',
-        target:'http://192.168.120.2:8000/',
+        target:'http://192.168.10.54:8000/',
+       
         ws: true,
         changeOrigin: true,
         // secure: false, // 如果是https接口，需要配置这个参数

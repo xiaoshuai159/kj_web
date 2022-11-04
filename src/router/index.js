@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '控制端', icon: 'dashboard' }
+      meta: { title: '控制端', icon: 'dashboard' ,keepAlive:true}
     },
     
   ]
@@ -65,7 +65,8 @@ export const constantRoutes = [
       component: () => import('@/views/replay/index'),
       meta:{
         title:'重放',
-        icon:'el-icon-menu'
+        icon:'el-icon-menu',
+        keepAlive:true
       },
     }]
   },

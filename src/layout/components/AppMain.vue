@@ -1,7 +1,11 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <!-- <router-view :key="key" /> -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" :key="key"/>
+      </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive" :key="key"/>
     </transition>
   </section>
 </template>

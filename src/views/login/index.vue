@@ -92,8 +92,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          //1.访问store中的user模块中的login方法
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            console.log('走到then了');
+            // console.log('走到then了');
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

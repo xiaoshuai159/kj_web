@@ -3,12 +3,12 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const actions = {
-  // user login
+  // 2.actions中的异步请求login，成功则用返回数据中获取token，commit放到仓库里
   async login({ commit }, userInfo) {
     const { username, password } = userInfo
     let result = await login({username: username.trim(), password: password});
     // console.dir(Promise)
-    //console.log('走到store里的user里了');
+    // console.log('走到store里的user里了');
     //console.log(result);
     if(result.code == 200){
       commit('SET_TOKEN', result.token)
