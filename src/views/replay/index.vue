@@ -42,7 +42,12 @@
     </el-row>
     <div>
       <el-empty :image-size="200" v-if="!isHave"></el-empty>
-      <el-card shadow="never" style="margin-top:2%;" v-else>{{repeatData}}</el-card>
+      <el-card shadow="never" style="margin-top:2%;" v-else>
+        <div v-for="(item,value) in repeatData" :key="value" style="margin:15px 5px">
+          {{item}}
+          <!-- <p><span v-for="val in item" style="margin-right:20px">{{ val }}</span></p> -->
+        </div>
+      </el-card>
     </div>
 
   </div>
@@ -55,13 +60,14 @@ export default {
   data() {
     return {
       loading:false,
-      repeatData:{},
+      repeatData:[],
+      // repeatData:[ "Actual: 3617 packets (2490782 bytes) sent in 0.452004 seconds", "Rated: 5510530.8 Bps, 44.08 Mbps, 8002.14 pps", "Flows: 112 flows, 247.78 fps, 1522 flow packets, 2095 non-flow", "Statistics for network device: enp7s0f0", "\tSuccessful packets: 3617", "\tFailed packets: 0", "\tTruncated packets: 0", "\tRetried packets (ENOBUFS): 0", "\tRetried packets (EAGAIN): 0" ],
       uploadData:{
         i:'',
         l:'5',
         p:'8000'
       },
-      repeatNum: 5,
+      repeatNum: 1,
       backNum:8000,
       fileList: [
         // {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, 
@@ -70,7 +76,12 @@ export default {
       fileSize:50, //文件大小限制，单位M
       fileLimit:1, //文件个数限制
       headers: { "Content-Type": "multipart/form-data" },
-      options: [],
+      options: [
+        // {
+        // value:'1.选项1',
+        // label:'enp7s0f0',
+        // }
+      ],
       value: '',
       isHave: false
     };
@@ -83,6 +94,7 @@ export default {
     next(0)
   },
   methods: {
+    //输入框数字限制
     inputBlur(){
       if(this.repeatNum){
         if(parseInt(this.repeatNum)>10||parseInt(this.repeatNum)<1){
@@ -112,9 +124,11 @@ export default {
       });
       // console.log(opt.label);
     },
+    //上传文件数量超出提示
     handleExceed() {
-        this.$message({ type: 'error', message: '最多支持1个附件上传' })
-      },
+      this.$message({ type: 'error', message: '最多支持1个附件上传' })
+    },
+    //获取网卡信息
     async getNetCardList(){
       const netCardList=await this.$API.replay.reqNetCardList()
       if (netCardList == "") return;
@@ -130,6 +144,10 @@ export default {
     },
     //文件上传前的处理
     beforeUpload(file){
+      if(!file){
+        this.$message.error('请选择pcap文件')
+        return false
+      }
       if(file.type != null||file.type!=""||file.type!=undefined){
         //截取文件后缀
         const FileExt = file.name.replace(/.+\./,"").toLowerCase()
@@ -155,10 +173,15 @@ export default {
       if(!this.value){
         this.$message.error('请选择网卡！')
         return false
+      }else if(this.$refs.upload.uploadFiles.length <= 0){
+        this.$message.error("请选择pcap文件");
+        return false
       }else{
         this.$message.success('正在回放，请稍候！')
         this.loading = true
         this.$refs.upload.submit();
+        // this.repeatData=[ "Actual: 3617 packets (2490782 bytes) sent in 0.452004 seconds", "Rated: 5510530.8 Bps, 44.08 Mbps, 8002.14 pps", "Flows: 112 flows, 247.78 fps, 1522 flow packets, 2095 non-flow", "Statistics for network device: enp7s0f0", "\tSuccessful packets: 3617", "\tFailed packets: 0", "\tTruncated packets: 0", "\tRetried packets (ENOBUFS): 0", "\tRetried packets (EAGAIN): 0" ]
+        return true
       }
       // let params = new FormData()
       // this.fileList.forEach((x) => {
@@ -174,9 +197,11 @@ export default {
       // console.log(fileInfo);
       // this.fileList = []//集合清空
     },
+    //文件列表移除文件时的钩子
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
+    //点击文件列表中已上传的文件时的钩子
     handlePreview(file) {
       console.log(file);
     },
@@ -184,30 +209,25 @@ export default {
     fileInfo(response, file, fileList) {
       this.isHave = true
       this.loading = false
-      console.log(response);
-      this.repeatData=response
+      // console.log(response[0]);     
+      this.repeatData=response[0]
+      // console.log(file);
+      // console.log(fileList);
+      this.$refs.upload.clearFiles();
+      this.fileList = []
+      
+      // console.log(this.fileList);
+      // let v1=Object.values(response[0])
+      // console.log(v1);
+      // for (let i=0;i<v1.length;i++){
+      //   console.log(v1[i]);
+      //   this.repeatData[i] = v1[i]
+      // }
     },
     //文件上传失败时的回调
     fileError(err, file, fileList) {
       this.isHave = false
       console.log(err);
-    },
-    filterOptions() {
-      let list1 = [];
-      for (var i = 0; i < this.netCardList.length; i++) {
-        // console.log(this.netCardList[i].value);
-        list1.push(this.netCardList[i]);
-      }
-      let list2 = [...new Set(list1)];
-      if (list2 == "") return;
-      for (var i = 0; i < list2.length; i++) {
-        if (list2[i] != "") {
-          this.options.push({
-            value: `1.选项${i + 1}`,
-            label: list2[i],
-          });
-        }
-      }
     },
   },
   watch:{
@@ -217,8 +237,8 @@ export default {
         let a = this.options.find((item,index)=>{
           if(item.value == newValue){
             this.uploadData.i = item.label
-            console.log(item.label);
-            console.log(this.uploadData);
+            // console.log(item.label);
+            // console.log(this.uploadData);
           }
         })
       }
@@ -232,8 +252,7 @@ export default {
       handler(newValue){
         this.uploadData.p = newValue
       }
-    },
-
+    }
   }
 }
 </script>

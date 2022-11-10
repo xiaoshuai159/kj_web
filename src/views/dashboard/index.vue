@@ -23,7 +23,7 @@
       <el-col :span="12" :offset="6">
         <div style="display:flex;justify-content:space-around;">
           <el-button type="primary" @click="allStart()" :loading="loading">全部开启</el-button>
-          <el-button type="primary" @click="CloseAllProductStatus()">全部关闭</el-button>
+          <el-button type="primary" @click="CloseAllProductStatus()" :loading="loading2">全部关闭</el-button>
         </div>
       </el-col>
     </el-row>
@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       loading:false,
+      loading2:false,
       myChart:null,
       timer:null,
       tableData: [{
@@ -94,11 +95,11 @@ export default {
         dataset: {
           dimension: ['product', 'CPU占比(%)', '内存占比(%)'],
           source: [
-            { product: 'DPDK', 'CPU占比(%)': 1, '内存占比(%)': 2 },
-            { product: 'ZEEK', 'CPU占比(%)': 2, '内存占比(%)': 3 },
-            { product: 'KAFKA', 'CPU占比(%)': 3, '内存占比(%)': 1 },
-            { product: 'MODELS_xy', 'CPU占比(%)': 4, '内存占比(%)': 2 },
-            { product: 'MODELS_zq', 'CPU占比(%)': 2, '内存占比(%)': 2 },
+            { product: 'DPDK', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'ZEEK', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'KAFKA', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'MODELS_xy', 'CPU占比(%)': 0, '内存占比(%)': 0 },
+            { product: 'MODELS_zq', 'CPU占比(%)': 0, '内存占比(%)': 0 },
           ]
         },
         xAxis: { type: 'category' },
@@ -172,19 +173,25 @@ export default {
           type: 'success'
         });
       this.loading = true
+      this.loading2 = true
       await this.getAllProductStatus()
       this.loading = false
+      this.loading2 = false
       this.timer = setInterval(()=>{
         this.getAllProductStatus()
       },30000)
     },
-    CloseAllProductStatus() {
+    async CloseAllProductStatus() {
       for (let i = 1; i < 10000; i++) {
                 clearInterval(i);
             }
       // clearInterval(this.timer)
       this.timer = null
-      this.$API.dashboard.reqCloseAll()
+      this.loading = true
+      this.loading2 = true
+      await this.$API.dashboard.reqCloseAll()
+      this.loading = false
+      this.loading2 = false
       this.tableData = [{
         platform: 'DPDK',
         CPUratio: '0%',
