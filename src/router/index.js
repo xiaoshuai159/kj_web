@@ -42,6 +42,102 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  {
+    path: '/knowledgeManage/labelManage',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 法律法规管理 / 条款数字化'
+    },
+    children: [{
+      path: '/knowledgeManage/labelManage',
+      component: () => import('../components/lawsManage/labelManage'),
+      meta: {
+        title: '标签管理',
+        keepAlive: true,
+      }
+    }]
+  }, {
+    path: '/addlawsFile',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 法律法规管理 / 法律文件管理'
+    },
+    children: [{
+      path: '/lawsManage/addlawsFile',
+      component: () => import('../components/lawsManage/addlawsFile'),
+      meta: {
+        title: '新增',
+        // icon:'el-icon-menu',
+        keepAlive: true
+      }
+    }]
+  }, {
+    path: '/addtermFile',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 法律法规管理 / 条款管理'
+    },
+    children: [{
+      path: '/lawsManage/addtermFile',
+      component: () => import('../components/lawsManage/addtermFile'),
+      meta: {
+        title: '新增',
+        // icon:'el-icon-menu',
+        keepAlive: true
+      }
+    }]
+  }, {
+    path: '/addstandardizeFile',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 法律法规管理 / 条款标准化'
+    },
+    children: [{
+      path: '/lawsManage/addstandardizeFile',
+      component: () => import('../components/lawsManage/addstandardizeFile'),
+      meta: {
+        title: '新增',
+        // icon:'el-icon-menu',
+        keepAlive: true
+      }
+    }]
+  }, {
+    path: '/adddigitalFile',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 法律法规管理 /  条款数字化'
+    },
+    children: [{
+      path: '/lawsManage/adddigitalFile',
+      component: () => import('../components/lawsManage/adddigitalFile'),
+      meta: {
+        title: '新增',
+        // icon:'el-icon-menu',
+        keepAlive: true
+      }
+    }]
+  }, {
+    path: '/subPage',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '知识管理 / 处理者管理 /  申报表'
+    },
+    children: [{
+      path: '/processorManage/shenbao',
+      component: () => import('../components/processorManage/shenbao'),
+      meta: {
+        title: '新增申报表',
+        // icon:'el-icon-menu',
+        keepAlive: true
+      }
+    }]
+  },
 
   {
     path: '/',
@@ -51,23 +147,98 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '控制端', icon: 'dashboard' ,keepAlive:true}
-    },
-    
-  ]
+      meta: { title: '首页', icon: 'el-icon-s-home', keepAlive: true }
+    }]
   },
   {
-    path:'/2',
-    component:Layout,   
-    children:[{
-      path:'replay',
-      name:'Replay',
-      component: () => import('@/views/replay/index'),
-      meta:{
-        title:'重放',
-        icon:'el-icon-menu',
-        keepAlive:true
-      },
+    path: '/dataOrigin',
+    component: Layout,
+    children: [{
+      path: '/dataOrigin',
+      component: () => import('@/views/dataOrigin/index'),
+      meta: {
+        title: '数据源管理',
+        icon: 'el-icon-s-data',
+        keepAlive: true
+      }
+    }]
+  },
+  {
+    path: '/knowledgeManage',
+    component: Layout,
+    meta: {
+      title: '知识管理',
+      icon: 'el-icon-s-management',
+      keepAlive: true
+    },
+    children: [{
+      path: '/knowledgeManage/lawsManage',
+      component: () => import('@/views/knowledgeManage/lawsManage'),
+
+      children: [
+        { path: '/lawsManage', meta: { title: '法律法规管理', keepAlive: true } }
+      ]
+    }, {
+      path: '/classifyManage',
+      component: () => import('@/views/knowledgeManage/classifyManage'),
+      children: [
+        { path: 'classifyManage', meta: { title: '分级分类管理', keepAlive: true } }
+      ]
+    }, {
+      path: '/processorManage',
+      component: () => import('@/views/knowledgeManage/processorManage'),
+      // meta: {
+      //   title: '处理者管理',
+      //   keepAlive: true
+      // },
+      // children: [{
+      //   path: '/subPage',
+      //   component: () => import('../components/processorManage/shenbao'),
+      //   meta: {
+      //     title: '申报表',
+      //     keepAlive: true
+      //   }}
+      // ]
+      children: [
+        { path: 'processorManage', meta: { title: '处理者管理', keepAlive: true } }
+      ]
+    }]
+  },
+  {
+    path: '/incidentSearch',
+    component: Layout,
+    children: [{
+      path: '/incidentSearch',
+      component: () => import('@/views/incidentSearch/index'),
+      meta: {
+        title: '违规事件查询',
+        icon: 'el-icon-s-order',
+        keepAlive: true
+      }
+    }]
+  }, {
+    path: '/encryptedTraffic',
+    component: Layout,
+    children: [{
+      path: '/encryptedTraffic',
+      component: () => import('@/views/encryptedTraffic/index'),
+      meta: {
+        title: '加密流量留存策略管理',
+        icon: 'el-icon-s-claim',
+        keepAlive: true
+      }
+    }]
+  },{
+    path: '/systemManage',
+    component: Layout,
+    children: [{
+      path: '/systemManage',
+      component: () => import('@/views/systemManage/index'),
+      meta: {
+        title: '系统管理',
+        icon: 'el-icon-menu',
+        keepAlive: true
+      }
     }]
   },
 

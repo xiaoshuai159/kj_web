@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '探针系统',
+  title: '数据出境违规行为判定',
 
   /**
    * @type {boolean} true | false
@@ -12,5 +12,6 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: false,
+  topHeader: true // topHeader显隐控制
 }
