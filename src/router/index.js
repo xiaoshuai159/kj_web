@@ -36,7 +36,18 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  {
+    name:'redirectPage',
+    path: '/incidentSearch/redirectPage',
+    component: () => import('@/views/incidentSearch/redirectPage'),
+    hidden: true
+  },
+  {
+    name:'xqRirectPage',
+    path: '/incidentSearch/xqRirectPage',
+    component: () => import('@/views/incidentSearch/xqRirectPage'),
+    hidden: true
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -207,6 +218,7 @@ export const constantRoutes = [
   {
     path: '/incidentSearch',
     component: Layout,
+    // hidden: true,
     children: [{
       path: '/incidentSearch',
       component: () => import('@/views/incidentSearch/index'),
